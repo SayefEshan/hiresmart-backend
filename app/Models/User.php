@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,5 +64,37 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Get the employer profile for the user.
+     */
+    public function employerProfile()
+    {
+        return $this->hasOne(EmployerProfile::class);
+    }
+
+    /**
+     * Get the candidate profile for the user.
+     */
+    public function candidateProfile()
+    {
+        return $this->hasOne(CandidateProfile::class);
+    }
+
+    /**
+     * Get the job listings created by the user (employer).
+     */
+    public function jobListings()
+    {
+        return $this->hasMany(JobListing::class);
+    }
+
+    /**
+     * Get the applications submitted by the user (candidate).
+     */
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
     }
 }

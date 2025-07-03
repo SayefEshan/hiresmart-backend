@@ -41,14 +41,14 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::create(['name' => $permission, 'guard_name' => 'api']);
         }
 
         // Create roles and assign permissions
-        $adminRole = Role::create(['name' => 'admin']);
+        $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
         $adminRole->givePermissionTo(Permission::all());
 
-        $employerRole = Role::create(['name' => 'employer']);
+        $employerRole = Role::create(['name' => 'employer', 'guard_name' => 'api']);
         $employerRole->givePermissionTo([
             'view jobs',
             'create jobs',
@@ -59,7 +59,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'edit own profile',
         ]);
 
-        $candidateRole = Role::create(['name' => 'candidate']);
+        $candidateRole = Role::create(['name' => 'candidate', 'guard_name' => 'api']);
         $candidateRole->givePermissionTo([
             'view jobs',
             'create applications',

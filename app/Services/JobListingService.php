@@ -16,11 +16,18 @@ class JobListingService
     public function getEmployerJobListings(User $employer, array $filters = []): LengthAwarePaginator
     {
         $query = $employer->jobListings()
-            ->with(['applications' => function ($q) {
-                $q->selectRaw('job_listing_id, count(*) as total, 
-                    sum(case when status = "pending" then 1 else 0 end) as pending_count')
-                    ->groupBy('job_listing_id');
-            }]);
+            ->withCount([
+                'applications',
+                'applications as pending_applications_count' => function ($query) {
+                    $query->where('status', 'pending');
+                },
+                'applications as reviewed_applications_count' => function ($query) {
+                    $query->where('status', 'reviewed');
+                },
+                'applications as shortlisted_applications_count' => function ($query) {
+                    $query->where('status', 'shortlisted');
+                }
+            ]);
 
         // Apply filters
         if (isset($filters['status'])) {
@@ -55,7 +62,7 @@ class JobListingService
     {
         return DB::transaction(function () use ($employer, $data) {
             $jobListing = $employer->jobListings()->create($data);
-           
+
             // Clear cache
             $this->clearJobListingsCache();
 

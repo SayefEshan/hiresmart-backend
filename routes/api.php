@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\JobListingController;
+use App\Http\Controllers\Api\Candidate\ApplicationController;
 use App\Http\Controllers\Api\Employer\JobListingController as EmployerJobListingController;
 
 /*
@@ -17,6 +19,10 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
+// Public job listings
+Route::get('jobs', [JobListingController::class, 'index']);
+Route::get('jobs/{jobListing}', [JobListingController::class, 'show']);
+
 // Protected routes
 Route::middleware('auth:api')->group(function () {
     Route::prefix('auth')->group(function () {
@@ -28,5 +34,11 @@ Route::middleware('auth:api')->group(function () {
     // Employer routes
     Route::middleware(['role:employer'])->prefix('employer')->group(function () {
         Route::apiResource('jobs', EmployerJobListingController::class);
+    });
+
+    // Candidate routes
+    Route::middleware(['role:candidate,api'])->prefix('candidate')->group(function () {
+        Route::get('applications', [ApplicationController::class, 'index']);
+        Route::post('jobs/{jobListing}/apply', [ApplicationController::class, 'apply']);
     });
 });

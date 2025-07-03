@@ -65,4 +65,26 @@ class JobListing extends Model
     {
         return $query->where('is_archived', true);
     }
+
+    /**
+     * Check if the given user owns this job listing
+     */
+    public function isOwnedBy(User $user): bool
+    {
+        return $this->user_id === $user->id;
+    }
+
+    /**
+     * Get applications count by status
+     */
+    public function getApplicationsCountByStatus(): array
+    {
+        return [
+            'total' => $this->applications()->count(),
+            'pending' => $this->applications()->where('status', 'pending')->count(),
+            'reviewed' => $this->applications()->where('status', 'reviewed')->count(),
+            'shortlisted' => $this->applications()->where('status', 'shortlisted')->count(),
+            'rejected' => $this->applications()->where('status', 'rejected')->count(),
+        ];
+    }
 }

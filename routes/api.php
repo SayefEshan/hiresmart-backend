@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\JobListingController;
-use App\Http\Controllers\Api\Candidate\ApplicationController;
 use App\Http\Controllers\Api\Employer\JobListingController as EmployerJobListingController;
+use App\Http\Controllers\Api\Candidate\ApplicationController;
+use App\Http\Controllers\Api\Employer\ApplicationController as EmployerApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,10 @@ Route::middleware('auth:api')->group(function () {
     });
 
     // Employer routes
-    Route::middleware(['role:employer'])->prefix('employer')->group(function () {
+    Route::middleware(['role:employer,api'])->prefix('employer')->group(function () {
         Route::apiResource('jobs', EmployerJobListingController::class);
+        Route::get('jobs/{jobListing}/applications', [EmployerApplicationController::class, 'index']);
+        Route::patch('jobs/{jobListing}/applications/{application}/status', [EmployerApplicationController::class, 'updateStatus']);
     });
 
     // Candidate routes

@@ -87,4 +87,22 @@ class JobListing extends Model
             'rejected' => $this->applications()->where('status', 'rejected')->count(),
         ];
     }
+
+    /**
+     * Get the skills required for this job listing.
+     */
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'job_skills')
+            ->withPivot('is_required')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the job matches for this listing.
+     */
+    public function jobMatches()
+    {
+        return $this->hasMany(JobMatch::class);
+    }
 }

@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\JobListingController;
-use App\Http\Controllers\Api\Employer\JobListingController as EmployerJobListingController;
+use App\Http\Controllers\Api\Admin\MetricsController;
 use App\Http\Controllers\Api\Candidate\ApplicationController;
+use App\Http\Controllers\Api\Employer\JobListingController as EmployerJobListingController;
 use App\Http\Controllers\Api\Employer\ApplicationController as EmployerApplicationController;
 
 /*
@@ -43,5 +44,10 @@ Route::middleware('auth:api')->group(function () {
     Route::middleware(['role:candidate,api'])->prefix('candidate')->group(function () {
         Route::get('applications', [ApplicationController::class, 'index']);
         Route::post('jobs/{jobListing}/apply', [ApplicationController::class, 'apply']);
+    });
+
+    // Admin routes
+    Route::middleware(['role:admin,api'])->prefix('admin')->group(function () {
+        Route::get('metrics', [MetricsController::class, 'index']);
     });
 });

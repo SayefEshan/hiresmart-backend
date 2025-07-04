@@ -1,0 +1,820 @@
+{
+    "info": {
+        "name": "HireSmart API",
+        "description": "Complete API collection for HireSmart job platform",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000/api",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "user_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "job_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "application_id",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register Employer",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Registration successful\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.data).to.have.property('access_token');",
+                                    "    pm.expect(jsonData.data).to.have.property('user');",
+                                    "    ",
+                                    "    // Store the access token",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.data.access_token);",
+                                    "    pm.collectionVariables.set(\"user_id\", jsonData.data.user.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test Employer\",\n    \"email\": \"employer{{$randomInt}}@test.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"role\": \"employer\",\n    \"company_name\": \"Test Company {{$randomInt}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Register Candidate",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Registration successful\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.data).to.have.property('access_token');",
+                                    "    pm.expect(jsonData.data).to.have.property('user');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test Candidate\",\n    \"email\": \"candidate{{$randomInt}}@test.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"role\": \"candidate\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/register",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "register"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Login successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.data).to.have.property('access_token');",
+                                    "    pm.expect(jsonData.data).to.have.property('user');",
+                                    "    ",
+                                    "    // Store the access token",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.data.access_token);",
+                                    "    pm.collectionVariables.set(\"user_id\", jsonData.data.user.id);",
+                                    "    pm.collectionVariables.set(\"user_roles\", JSON.stringify(jsonData.data.user.roles));",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"employer@test.com\",\n    \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Login Admin",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Login successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.data.access_token);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@hiresmart.com\",\n    \"password\": \"admin123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "login"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Profile",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Get profile successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    pm.response.to.have.jsonBody('user');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/me",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "me"]
+                        }
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Token refresh successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"access_token\", jsonData.token);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/refresh",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "refresh"]
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Logout successful\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "    ",
+                                    "    // Clear stored variables",
+                                    "    pm.collectionVariables.unset(\"access_token\");",
+                                    "    pm.collectionVariables.unset(\"user_id\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "logout"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Public Job Listings",
+            "item": [
+                {
+                    "name": "Browse Jobs",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/jobs?keyword=laravel&location=remote&employment_type=full-time&per_page=10",
+                            "host": ["{{base_url}}"],
+                            "path": ["jobs"],
+                            "query": [
+                                {
+                                    "key": "keyword",
+                                    "value": "laravel"
+                                },
+                                {
+                                    "key": "location",
+                                    "value": "remote"
+                                },
+                                {
+                                    "key": "employment_type",
+                                    "value": "full-time"
+                                },
+                                {
+                                    "key": "min_salary",
+                                    "value": "50000",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "max_salary",
+                                    "value": "150000",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "View Job Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/jobs/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["jobs", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Employer",
+            "item": [
+                {
+                    "name": "Create Job Listing",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Job created successfully\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"job_id\", jsonData.data.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Senior Laravel Developer\",\n    \"description\": \"We are looking for an experienced Laravel developer to join our team. The ideal candidate will have at least 5 years of experience with Laravel and modern PHP development practices.\",\n    \"location\": \"Remote\",\n    \"employment_type\": \"full-time\",\n    \"min_salary\": 80000,\n    \"max_salary\": 120000,\n    \"experience_required\": 5\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs",
+                            "host": ["{{base_url}}"],
+                            "path": ["employer", "jobs"]
+                        }
+                    }
+                },
+                {
+                    "name": "List My Jobs",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs?status=active&per_page=10",
+                            "host": ["{{base_url}}"],
+                            "path": ["employer", "jobs"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "active"
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "developer",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "View Job Details",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs/{{job_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["employer", "jobs", "{{job_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Job Listing",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Senior Full Stack Developer\",\n    \"min_salary\": 90000,\n    \"max_salary\": 130000\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs/{{job_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["employer", "jobs", "{{job_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Job Listing",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs/{{job_id}}",
+                            "host": ["{{base_url}}"],
+                            "path": ["employer", "jobs", "{{job_id}}"]
+                        }
+                    }
+                },
+                {
+                    "name": "View Job Applications",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs/{{job_id}}/applications?status=pending",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "employer",
+                                "jobs",
+                                "{{job_id}}",
+                                "applications"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending"
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10",
+                                    "disabled": true
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Application Status",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"shortlisted\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/employer/jobs/{{job_id}}/applications/{{application_id}}/status",
+                            "host": ["{{base_url}}"],
+                            "path": [
+                                "employer",
+                                "jobs",
+                                "{{job_id}}",
+                                "applications",
+                                "{{application_id}}",
+                                "status"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Candidate",
+            "item": [
+                {
+                    "name": "Apply to Job",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Application submitted successfully\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "    ",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.collectionVariables.set(\"application_id\", jsonData.data.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"cover_letter\": \"I am very interested in this position. With my 5+ years of Laravel experience and expertise in modern PHP development, I believe I would be a great fit for your team. I have successfully delivered multiple large-scale projects and am passionate about clean code and best practices.\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/candidate/jobs/{{job_id}}/apply",
+                            "host": ["{{base_url}}"],
+                            "path": ["candidate", "jobs", "{{job_id}}", "apply"]
+                        }
+                    }
+                },
+                {
+                    "name": "View My Applications",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/candidate/applications?status=pending",
+                            "host": ["{{base_url}}"],
+                            "path": ["candidate", "applications"],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "pending"
+                                },
+                                {
+                                    "key": "per_page",
+                                    "value": "10",
+                                    "disabled": true
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Admin",
+            "item": [
+                {
+                    "name": "Platform Metrics",
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "{{access_token}}",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/admin/metrics",
+                            "host": ["{{base_url}}"],
+                            "path": ["admin", "metrics"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

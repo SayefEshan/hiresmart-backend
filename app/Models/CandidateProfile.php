@@ -35,4 +35,14 @@ class CandidateProfile extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the skills for this candidate.
+     */
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'candidate_skills')
+            ->withPivot('proficiency')
+            ->withTimestamps();
+    }
 }

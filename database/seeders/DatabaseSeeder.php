@@ -16,7 +16,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             SkillsSeeder::class,
-            AdminUserSeeder::class,
+        ]);
+
+        // Data seeders (run in order)
+        $this->call([
+            UserSeeder::class,           // Creates all users with different roles
+            JobListingSeeder::class,     // Creates job listings for employers
+            ApplicationSeeder::class,    // Creates applications from candidates
+            CandidateSkillSeeder::class, // Assigns skills to candidates
         ]);
     }
 }

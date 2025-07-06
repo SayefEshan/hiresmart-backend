@@ -198,7 +198,7 @@ hiresmart-backend/
 
 1. **Import the Postman Collection**
 
-    - Download the [Postman Collection](HireSmart%20API.postman_collection.json)
+    - Download the [Postman Collection](docs/HireSmart%20API.postman_collection.json)
     - Open Postman and click "Import"
     - Select the downloaded JSON file
 

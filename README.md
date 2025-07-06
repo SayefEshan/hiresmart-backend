@@ -75,12 +75,6 @@ docker compose exec app php artisan db:seed
 -   **Implementation**: All business logic resides in service classes (`app/Services/`)
 -   **Benefit**: Controllers remain thin and focused on HTTP concerns
 
-#### **Repository Pattern (Skipped)**
-
--   **Why skipped**: Laravel's Eloquent ORM already provides excellent abstraction
--   **Alternative**: Used model scopes and methods for reusable queries
--   **Benefit**: Reduced complexity without sacrificing functionality
-
 #### **API Resources**
 
 -   **Why**: Consistent API responses with proper data transformation
@@ -214,12 +208,6 @@ hiresmart-backend/
     - Test employer features: Create jobs, view applications
     - Test candidate features: Browse jobs, apply
     - Test admin features: View metrics
-
-4. **Collection Features**
-    - Automatic token management
-    - Pre-request scripts for dynamic data
-    - Test scripts for response validation
-    - Example requests for all endpoints
 
 ## 📚 Documentation
 

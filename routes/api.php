@@ -4,10 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\JobListingController;
-use App\Http\Controllers\Api\Admin\MetricsController;
-use App\Http\Controllers\Api\Candidate\ApplicationController;
 use App\Http\Controllers\Api\Employer\JobListingController as EmployerJobListingController;
 use App\Http\Controllers\Api\Employer\ApplicationController as EmployerApplicationController;
+use App\Http\Controllers\Api\Candidate\ApplicationController;
+use App\Http\Controllers\Api\Admin\MetricsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,12 +18,14 @@ use App\Http\Controllers\Api\Employer\ApplicationController as EmployerApplicati
 // Public routes
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
+    Route::post('login', [AuthController::class, 'login'])->middleware('throttle:5,15'); // 5 attempts per 15 minutes
 });
 
-// Public job listings
-Route::get('jobs', [JobListingController::class, 'index']);
-Route::get('jobs/{jobListing}', [JobListingController::class, 'show']);
+// Public job listings with rate limit
+Route::middleware('throttle:30,1')->group(function () { // 30 requests per minute
+    Route::get('jobs', [JobListingController::class, 'index']);
+    Route::get('jobs/{jobListing}', [JobListingController::class, 'show']);
+});
 
 // Protected routes
 Route::middleware('auth:api')->group(function () {
@@ -43,7 +45,8 @@ Route::middleware('auth:api')->group(function () {
     // Candidate routes
     Route::middleware(['role:candidate,api'])->prefix('candidate')->group(function () {
         Route::get('applications', [ApplicationController::class, 'index']);
-        Route::post('jobs/{jobListing}/apply', [ApplicationController::class, 'apply']);
+        Route::post('jobs/{jobListing}/apply', [ApplicationController::class, 'apply'])
+            ->middleware('throttle:10,60'); // 10 applications per hour
     });
 
     // Admin routes

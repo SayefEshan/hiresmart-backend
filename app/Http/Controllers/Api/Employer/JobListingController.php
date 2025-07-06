@@ -44,7 +44,7 @@ class JobListingController extends Controller
             $request->user(),
             $request->validated()
         );
-        
+
         return (new JobListingResource($jobListing))
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
@@ -53,14 +53,14 @@ class JobListingController extends Controller
     /**
      * Display the specified job listing.
      */
-    public function show(JobListing $jobListing): JobListingResource
+    public function show(JobListing $job): JobListingResource
     {
         // Check if user owns this job listing
-        if (!$jobListing->isOwnedBy(request()->user())) {
+        if (!$job->isOwnedBy(request()->user())) {
             abort(403, 'Unauthorized access to this job listing.');
         }
 
-        $jobListing->loadCount([
+        $job->loadCount([
             'applications',
             'applications as pending_applications_count' => function ($query) {
                 $query->where('status', 'pending');
@@ -73,38 +73,38 @@ class JobListingController extends Controller
             }
         ]);
 
-        return new JobListingResource($jobListing);
+        return new JobListingResource($job);
     }
 
     /**
      * Update the specified job listing.
      */
-    public function update(UpdateJobListingRequest $request, JobListing $jobListing): JobListingResource
+    public function update(UpdateJobListingRequest $request, JobListing $job): JobListingResource
     {
         // Check if user owns this job listing
-        if (!$jobListing->isOwnedBy($request->user())) {
+        if (!$job->isOwnedBy($request->user())) {
             abort(403, 'Unauthorized access to this job listing.');
         }
 
-        $updatedJobListing = $this->jobListingService->updateJobListing(
-            $jobListing,
+        $updatedJob = $this->jobListingService->updateJobListing(
+            $job,
             $request->validated()
         );
 
-        return new JobListingResource($updatedJobListing);
+        return new JobListingResource($updatedJob);
     }
 
     /**
      * Remove the specified job listing.
      */
-    public function destroy(Request $request, JobListing $jobListing): JsonResponse
+    public function destroy(Request $request, JobListing $job): JsonResponse
     {
         // Check if user owns this job listing
-        if (!$jobListing->isOwnedBy($request->user())) {
+        if (!$job->isOwnedBy($request->user())) {
             abort(403, 'Unauthorized access to this job listing.');
         }
 
-        $this->jobListingService->deleteJobListing($jobListing);
+        $this->jobListingService->deleteJobListing($job);
 
         return response()->json([
             'message' => 'Job listing deleted successfully.'

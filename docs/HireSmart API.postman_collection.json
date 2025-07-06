@@ -365,7 +365,7 @@
                             }
                         ],
                         "url": {
-                            "raw": "{{base_url}}/jobs?keyword=laravel&location=remote&employment_type=full-time&per_page=10",
+                            "raw": "{{base_url}}/jobs?employment_type=full-time&per_page=10",
                             "host": ["{{base_url}}"],
                             "path": ["jobs"],
                             "query": [

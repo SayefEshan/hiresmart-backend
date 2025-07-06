@@ -15,7 +15,7 @@ A robust job platform backend that connects employers with candidates, built wit
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/SayefEshan/hiresmart-backend
+git clone https://github.com/YOUR_USERNAME/hiresmart-backend.git
 cd hiresmart-backend
 ```
 
@@ -28,7 +28,7 @@ cp .env.example .env
 3. **Start Docker containers**
 
 ```bash
-docker compose up -d --build
+docker compose up -d
 ```
 
 4. **Install dependencies**
@@ -74,6 +74,12 @@ docker compose exec app php artisan db:seed
 -   **Why**: Separates business logic from controllers, making code more maintainable and testable
 -   **Implementation**: All business logic resides in service classes (`app/Services/`)
 -   **Benefit**: Controllers remain thin and focused on HTTP concerns
+
+#### **Repository Pattern (Skipped)**
+
+-   **Why skipped**: Laravel's Eloquent ORM already provides excellent abstraction
+-   **Alternative**: Used model scopes and methods for reusable queries
+-   **Benefit**: Reduced complexity without sacrificing functionality
 
 #### **API Resources**
 
@@ -135,7 +141,7 @@ REDIS_PASSWORD=null
 REDIS_PORT=6379
 
 # Cache & Queue
-CACHE_STORE=redis
+CACHE_DRIVER=redis
 QUEUE_CONNECTION=redis
 SESSION_DRIVER=redis
 
@@ -185,46 +191,59 @@ hiresmart-backend/
 │   └── seeders/              # Database seeders
 ├── docker/                   # Docker configuration
 ├── docs/                     # Documentation
-└── tests/                    # Test suites
+
 ```
 
-## 🧪 Testing
+### API Testing with Postman
 
-Run the test suite:
+1. **Import the Postman Collection**
 
-```bash
-docker compose exec app php artisan test
-```
+    - Download the [Postman Collection](HireSmart%20API.postman_collection.json)
+    - Open Postman and click "Import"
+    - Select the downloaded JSON file
 
-## 📊 Database Schema
+2. **Configure Environment**
 
-See [Database ERD](docs/database-erd.md) for detailed schema information.
+    - The collection includes variables for `base_url`, `access_token`, etc.
+    - Default `base_url` is set to `http://localhost:8000/api`
 
-Key tables:
+3. **Testing Flow**
 
--   `users`: Authentication and basic user info
--   `employer_profiles` & `candidate_profiles`: Role-specific data
--   `job_listings`: Job postings
--   `applications`: Job applications
--   `skills` & related tables: Skill management
--   `job_matches`: Automated matching results
+    - Start with Authentication → Register/Login
+    - The collection automatically stores tokens and IDs
+    - Test employer features: Create jobs, view applications
+    - Test candidate features: Browse jobs, apply
+    - Test admin features: View metrics
 
-## 🔒 API Authentication
+4. **Collection Features**
+    - Automatic token management
+    - Pre-request scripts for dynamic data
+    - Test scripts for response validation
+    - Example requests for all endpoints
 
-1. **Register**: `POST /api/auth/register`
-2. **Login**: `POST /api/auth/login` (returns JWT token)
-3. **Use token**: `Authorization: Bearer {token}` header
+## 📚 Documentation
 
-See [API Documentation](docs/api-documentation.md) for complete endpoint reference.
+-   **[Database Schema](docs/database-erd.md)** - Entity relationship diagram
+-   **[Postman Collection](docs/HireSmart%20API.postman_collection.json)** - Import for easy API testing
 
-## 🤝 Default Credentials
+## 🤝 Test Credentials
 
-After seeding:
+After running seeders, you can use these accounts:
 
--   **Admin**: admin@hiresmart.com / admin123
--   **Test Employer**: Create via registration
--   **Test Candidate**: Create via registration
+### Admin
 
-## 📝 License
+-   **Email**: admin@hiresmart.com
+-   **Password**: admin123
 
-This project is created as part of the JoulesLabs technical assessment.
+### Employers
+
+-   john@techstartup.com / password123
+-   sarah@digitalagency.com / password123
+-   michael@ecommerce.com / password123
+
+### Candidates
+
+-   alice@example.com / password123
+-   bob@example.com / password123
+-   emma@example.com / password123
+-   david@example.com / password123

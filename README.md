@@ -15,7 +15,7 @@ A robust job platform backend that connects employers with candidates, built wit
 1. **Clone the repository**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/hiresmart-backend.git
+git clone https://github.com/SayefEshan/hiresmart-backend
 cd hiresmart-backend
 ```
 
